@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>En memoria de Anita Del Angel Del Angel</title>
+  <title>En memoria de Anita Del Angel Del Angel †</title>
   <meta name="description" content="Memorial con fotos, video, carta y música." />
   <meta property="og:title" content="En memoria de [Nombre]" />
   <meta property="og:description" content="Un espacio para recordar y honrar su vida." />
@@ -211,26 +211,26 @@
     <header class="hero">
       <img class="portrait" src="assets/fotos/portrait.jpg" alt="Retrato de [Nombre de tu abuela]">
       <div class="title">
-        <h1>En memoria de Anita Del Angel Del Angel</h1>
+        <h1>En memoria de Anita Del Angel Del Angel ✞</h1>
         <p>26 de julio Del 1937 – 24 de diciembre del 2023</p>
       </div>
     </header>
 
-    <section class="card" id="galeria">
-      <h2>Galería de fotos</h2>
-      <div class="grid" id="gallery">
-        <div class="thumb"><img src="assets/fotos/1.jpg" alt="Foto 1" data-full="assets/fotos/1.jpg"></div>
-        <div class="thumb"><img src="assets/fotos/2.jpg" alt="Foto 2" data-full="assets/fotos/2.jpg"></div>
-        <div class="thumb"><img src="assets/fotos/3.jpg" alt="Foto 3" data-full="assets/fotos/3.jpg"></div>
-      
-        <!-- Cuarta foto con overlay "ver más" -->
-        <div class="thumb more" onclick="openLb(3)">
-          <img src="assets/fotos/4.jpg" alt="Foto 4" data-full="assets/fotos/4.jpg">
-          <div class="overlay">+ Ver más</div>
-        </div>
-      </div>
+<section class="card" id="galeria">
+  <h2>Galería de fotos</h2>
+  <div class="grid" id="gallery">
+    <div class="thumb"><img src="assets/fotos/1.jpg" alt="Foto 1" data-full="assets/fotos/1.jpg"></div>
+    <div class="thumb"><img src="assets/fotos/2.jpg" alt="Foto 2" data-full="assets/fotos/2.jpg"></div>
+    <div class="thumb"><img src="assets/fotos/3.jpg" alt="Foto 3" data-full="assets/fotos/3.jpg"></div>
 
-    </section>
+    <!-- Cuarta miniatura con overlay -->
+    <div class="thumb more" onclick="openLb(3)">
+      <img src="assets/fotos/4.jpg" alt="Foto 4" data-full="assets/fotos/4.jpg">
+      <div class="overlay">+ Ver más</div>
+    </div>
+  </div>
+</section>
+
 
     <section class="card" id="carta">
       <h2>Carta de tu hija</h2>
@@ -275,14 +275,39 @@ Te amo madre, hasta pronto 💖
   </div>
 
   <script>
+    // --- BOTÓN ENTRAR Y MÚSICA ---
     const gate = document.getElementById('gate');
-    const bgm  = document.getElementById('bgm');
+    const bgm = document.getElementById('bgm');
     document.getElementById('enterBtn').addEventListener('click', async () => {
-      try { await bgm.play(); } catch(e) {}
-      gate.style.display='none';
+      try { await bgm.play(); } catch (e) { }
+      gate.style.display = 'none';
     });
+  </script>
+  
+  <script>
+    // --- GALERÍA Y LIGHTBOX ---
+    const allThumbs = [
+      "assets/fotos/1.jpg", "assets/fotos/2.jpg", "assets/fotos/3.jpg",
+      "assets/fotos/4.jpg", "assets/fotos/5.jpg", "assets/fotos/6.jpg",
+      "assets/fotos/7.jpg", "assets/fotos/8.jpg", "assets/fotos/9.jpg",
+      "assets/fotos/10.jpg", "assets/fotos/11.jpg", "assets/fotos/12.jpg",
+      "assets/fotos/13.jpg", "assets/fotos/14.jpg", "assets/fotos/15.jpg",
+      "assets/fotos/16.jpg", "assets/fotos/17.jpg", "assets/fotos/18.jpg",
+      "assets/fotos/19.jpg", "assets/fotos/20.jpg", "assets/fotos/21.jpg",
+      "assets/fotos/22.jpg", "assets/fotos/23.jpg", "assets/fotos/24.jpg",
+      "assets/fotos/25.jpg", "assets/fotos/26.jpg", "assets/fotos/27.jpg",
+      "assets/fotos/28.jpg", "assets/fotos/29.jpg", "assets/fotos/30.jpg",
+      "assets/fotos/31.jpg", "assets/fotos/32.jpg", "assets/fotos/33.jpg",
+      "assets/fotos/34.jpg", "assets/fotos/35.jpg", "assets/fotos/36.jpg",
+      "assets/fotos/37.jpg", "assets/fotos/38.jpg", "assets/fotos/39.jpg",
+      "assets/fotos/40.jpg", "assets/fotos/41.jpg", "assets/fotos/42.jpg",
+      "assets/fotos/43.jpg", "assets/fotos/44.jpg", "assets/fotos/45.jpg",
+      "assets/fotos/46.jpg", "assets/fotos/47.jpg", "assets/fotos/48.jpg",
+      "assets/fotos/49.jpg", "assets/fotos/50.jpg", "assets/fotos/51.jpg",
+      "assets/fotos/52.jpg", "assets/fotos/53.jpg", "assets/fotos/54.jpg",
+      "assets/fotos/55.jpg"
+    ];
 
-    const thumbs = Array.from(document.querySelectorAll('#gallery img'));
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');
     const closeLb = document.getElementById('closeLb');
@@ -290,28 +315,57 @@ Te amo madre, hasta pronto 💖
     const nextLb = document.getElementById('nextLb');
     let current = 0;
 
-    function openLb(idx){
+    function openLb(idx) {
       current = idx;
-      lbImg.src = thumbs[current].dataset.full || thumbs[current].src;
+      lbImg.src = allThumbs[current];
       lb.classList.add('open');
-      lb.setAttribute('aria-hidden','false');
+      lb.setAttribute('aria-hidden', 'false');
     }
-    function close(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); }
-    function prev(){ current = (current - 1 + thumbs.length) % thumbs.length; openLb(current); }
-    function next(){ current = (current + 1) % thumbs.length; openLb(current); }
 
-    thumbs.forEach((img, i)=> img.addEventListener('click', ()=> openLb(i)));
+    function close() {
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden', 'true');
+    }
+
+    function prev() {
+      current = (current - 1 + allThumbs.length) % allThumbs.length;
+      openLb(current);
+    }
+
+    function next() {
+      current = (current + 1) % allThumbs.length;
+      openLb(current);
+    }
+
     closeLb.addEventListener('click', close);
-    prevLb.addEventListener('click', e=>{ e.stopPropagation(); prev(); });
-    nextLb.addEventListener('click', e=>{ e.stopPropagation(); next(); });
-    lb.addEventListener('click', e=>{ if(e.target===lb) close(); });
-    window.addEventListener('keydown', e=>{
-      if(!lb.classList.contains('open')) return;
-      if(e.key==='Escape') close();
-      if(e.key==='ArrowLeft') prev();
-      if(e.key==='ArrowRight') next();
+    prevLb.addEventListener('click', e => { e.stopPropagation(); prev(); });
+    nextLb.addEventListener('click', e => { e.stopPropagation(); next(); });
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    window.addEventListener('keydown', e => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
     });
+
+    // --- SOLO MOSTRAR 4 MINIATURAS ---
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
+    for (let i = 0; i < 4; i++) {
+      const div = document.createElement('div');
+      if (i === 3) {
+        div.className = 'thumb more';
+        div.innerHTML = `<img src="${allThumbs[i]}" alt="Foto ${i + 1}" data-full="${allThumbs[i]}">
+                         <div class="overlay">+ Ver más</div>`;
+      } else {
+        div.className = 'thumb';
+        div.innerHTML = `<img src="${allThumbs[i]}" alt="Foto ${i + 1}" data-full="${allThumbs[i]}">`;
+      }
+      div.addEventListener('click', () => openLb(i));
+      gallery.appendChild(div);
+    }
   </script>
+
 
 </body>
 </html>
