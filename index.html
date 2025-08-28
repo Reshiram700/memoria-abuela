@@ -436,13 +436,9 @@
 
       // Colores rojos y rosados tenues para pétalos de rosa
       const colors = [
-        'rgba(219, 112, 147, 0.6)', // Rosado medio
-        'rgba(199, 21, 133, 0.5)',  // Rosado fuerte
-        'rgba(255, 105, 180, 0.5)', // Rosado caliente
-        'rgba(255, 20, 147, 0.5)',  // Rosado profundo
+          // Rosado profundo
         'rgba(178, 34, 34, 0.5)',   // Rojo ladrillo
-        'rgba(205, 92, 92, 0.5)',   // Rojo indio
-        'rgba(255, 99, 71, 0.5)'    // Rojo tomate
+        
       ];
 
       // Tamaños ligeramente diferentes
@@ -480,14 +476,14 @@
     }
 
     function startPetalsAnimation() {
-      // Crear pétalos iniciales
-      for (let i = 0; i < 15; i++) {
-        setTimeout(createPetal, i * 300);
-      }
+        // Crear menos pétalos iniciales (solo 8 en lugar de 15)
+        for (let i = 0; i < 8; i++) {
+          setTimeout(createPetal, i * 800); // Más espaciado entre pétalos
+        }
 
-      // Continuar creando pétalos periódicamente
-      setInterval(createPetal, 500);
-    }
+        // Crear pétalos con menos frecuencia (cada 1.5 segundos en lugar de 0.5)
+        setInterval(createPetal, 1500);
+      }
 
     // Iniciar la animación de pétalos cuando la página cargue
     // Pero solo si ya se ha pasado la pantalla de entrada
