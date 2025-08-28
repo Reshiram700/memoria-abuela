@@ -325,6 +325,13 @@
         height: 12px;
       }
     }
+
+    /* Para dispositivos móviles, forzar el mismo color de pétalos */
+    @media (max-width: 768px) {
+      .petal {
+        background: rgba(178, 34, 34, 0.5) !important;
+      }
+    }
   </style>
 </head>
 
