@@ -438,49 +438,42 @@
 
     // --- SISTEMA DE PÉTALOS (ROJOS) ---
     function createPetal() {
-      const petal = document.createElement('div');
-      petal.className = 'petal';
+        const petal = document.createElement('div');
+        petal.className = 'petal';
 
-      // Colores rojos y rosados tenues para pétalos de rosa
-      const colors = [
-          // Rosado profundo
-        'rgba(178, 34, 34, 0.5)',   // Rojo ladrillo
-        
-      ];
+        // Tamaños ligeramente diferentes
+        const size = 10 + Math.random() * 12;
 
-      // Tamaños ligeramente diferentes
-      const size = 10 + Math.random() * 12;
+        // Posición horizontal aleatoria
+        const left = Math.random() * 100;
 
-      // Posición horizontal aleatoria
-      const left = Math.random() * 100;
+        // Duración de la animación (entre 15 y 30 segundos)
+        const duration = 15 + Math.random() * 20;
 
-      // Duración de la animación (entre 15 y 30 segundos)
-      const duration = 15 + Math.random() * 20;
+        // Retraso inicial
+        const delay = Math.random() * 5;
 
-      // Retraso inicial
-      const delay = Math.random() * 5;
+        // Rotación aleatoria
+        const rotation = Math.random() * 360;
 
-      // Rotación aleatoria
-      const rotation = Math.random() * 360;
+        // Aplicar estilos - COLOR FIJO
+        petal.style.left = `${left}vw`;
+        petal.style.width = `${size}px`;
+        petal.style.height = `${size}px`;
+        petal.style.background = 'rgba(178, 34, 34, 0.5)'; // Color fijo
+        petal.style.borderRadius = '50% 0 50% 50%';
+        petal.style.transform = `rotate(${rotation}deg)`;
+        petal.style.animationDuration = `${duration}s`;
+        petal.style.animationDelay = `${delay}s`;
 
-      // Aplicar estilos
-      petal.style.left = `${left}vw`;
-      petal.style.width = `${size}px`;
-      petal.style.height = `${size}px`;
-      petal.style.background = colors[Math.floor(Math.random() * colors.length)];
-      petal.style.borderRadius = '50% 0 50% 50%';
-      petal.style.transform = `rotate(${rotation}deg)`;
-      petal.style.animationDuration = `${duration}s`;
-      petal.style.animationDelay = `${delay}s`;
+        // Añadir al contenedor
+        document.getElementById('petals-container').appendChild(petal);
 
-      // Añadir al contenedor
-      document.getElementById('petals-container').appendChild(petal);
-
-      // Eliminar el pétalo después de que termine la animación
-      setTimeout(() => {
-        petal.remove();
-      }, (duration + delay) * 1000);
-    }
+        // Eliminar el pétalo después de que termine la animación
+        setTimeout(() => {
+          petal.remove();
+        }, (duration + delay) * 1000);
+      }
 
     function startPetalsAnimation() {
         // Crear menos pétalos iniciales (solo 8 en lugar de 15)
