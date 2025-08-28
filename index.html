@@ -171,6 +171,24 @@
       .grid { grid-template-columns: 1fr }
       .thumb img { height: 160px }
     }
+
+    .thumb.more {
+  position: relative;
+}
+
+.thumb.more .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+}
+
   </style>
 </head>
 <body>
