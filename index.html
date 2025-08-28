@@ -24,13 +24,12 @@
       --accent: #c084fc;
     }
     * { box-sizing: border-box }
-    html, body {
-  margin: 0;
-  height: 100%;
-  background: transparent; /* importante */
-  color: var(--text);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
-}
+    html, body { 
+      margin: 0; 
+      height: 100%;
+      background: var(--bg);
+      color: var(--text); 
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial; }
 
     a { color: inherit }
     .wrap { max-width: 1000px; margin: auto; padding: 24px }
@@ -289,71 +288,6 @@ Te amo madre, hasta pronto 💖
       if(e.key==='ArrowRight') next();
     });
   </script>
-
-  <script>
-  // Configuración del canvas
-  const canvas = document.getElementById('petalos');
-  const ctx = canvas.getContext('2d');
-  let w, h;
-  const petalos = [];
-
-  function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  class Petalo {
-    constructor() {
-      this.reset();
-    }
-    reset() {
-      this.x = Math.random() * w;
-      this.y = Math.random() * -h;
-      this.size = 10 + Math.random() * 14;
-      this.speedY = 0.5 + Math.random() * 1;
-      this.speedX = Math.random() * 0.5 - 0.25;
-      this.angle = Math.random() * Math.PI * 2;
-      this.rotationSpeed = (Math.random() - 0.5) * 0.02;
-      this.opacity = 0.7 + Math.random() * 0.3;
-    }
-    draw() {
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.angle);
-      ctx.fillStyle = `rgba(220, 20, 60, ${this.opacity})`; // rojo suave
-      ctx.beginPath();
-      ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-    update() {
-      this.y += this.speedY;
-      this.x += this.speedX;
-      this.angle += this.rotationSpeed;
-      if (this.y > h + 20) this.reset();
-    }
-  }
-
-  for (let i = 0; i < 40; i++) petalos.push(new Petalo());
-
-  function animar() {
-    ctx.clearRect(0, 0, w, h);
-    petalos.forEach(p => {
-      p.update();
-      p.draw();
-    });
-    requestAnimationFrame(animar);
-  }
-  animar();
-
-  // Hacer que el canvas quede detrás de todo
-  canvas.style.position = 'fixed';
-  canvas.style.top = 0;
-  canvas.style.left = 0;
-  canvas.style.zIndex = '-1';
-</script>
 
 </body>
 </html>
