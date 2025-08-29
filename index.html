@@ -548,27 +548,8 @@
 
   <script>
     // --- GALERÍA Y LIGHTBOX ---
-    const allThumbs = [
-      "assets/fotos/1.jpg", "assets/fotos/2.jpg", "assets/fotos/3.jpg",
-      "assets/fotos/4.jpg", "assets/fotos/5.jpg", "assets/fotos/6.jpg",
-      "assets/fotos/7.jpg", "assets/fotos/8.jpg", "assets/fotos/9.jpg",
-      "assets/fotos/10.jpg", "assets/fotos/11.jpg", "assets/fotos/12.jpg",
-      "assets/fotos/13.jpg", "assets/fotos/14.jpg", "assets/fotos/15.jpg",
-      "assets/fotos/16.jpg", "assets/fotos/17.jpg", "assets/fotos/18.jpg",
-      "assets/fotos/19.jpg", "assets/fotos/20.jpg", "assets/fotos/21.jpg",
-      "assets/fotos/22.jpg", "assets/fotos/23.jpg", "assets/fotos/24.jpg",
-      "assets/fotos/25.jpg", "assets/fotos/26.jpg", "assets/fotos/27.jpg",
-      "assets/fotos/28.jpg", "assets/fotos/29.jpg", "assets/fotos/30.jpg",
-      "assets/fotos/31.jpg", "assets/fotos/32.jpg", "assets/fotos/33.jpg",
-      "assets/fotos/34.jpg", "assets/fotos/35.jpg", "assets/fotos/36.jpg",
-      "assets/fotos/37.jpg", "assets/fotos/38.jpg", "assets/fotos/39.jpg",
-      "assets/fotos/40.jpg", "assets/fotos/41.jpg", "assets/fotos/42.jpg",
-      "assets/fotos/43.jpg", "assets/fotos/44.jpg", "assets/fotos/45.jpg",
-      "assets/fotos/46.jpg", "assets/fotos/47.jpg", "assets/fotos/48.jpg",
-      "assets/fotos/49.jpg", "assets/fotos/50.jpg", "assets/fotos/51.jpg",
-      "assets/fotos/52.jpg", "assets/fotos/53.jpg", "assets/fotos/54.jpg",
-      "assets/fotos/55.jpg"
-    ];
+    const allThumbs = Array.from({ length: 55 }, (_, i) => `assets/fotos/${i + 1}.jpg`);
+
 
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');
@@ -613,42 +594,56 @@
     // --- SOLO MOSTRAR 4 MINIATURAS ---
     const gallery = document.getElementById('gallery');
     gallery.innerHTML = '';
+
     for (let i = 0; i < 4; i++) {
       const div = document.createElement('div');
+
       if (i === 3) {
         div.className = 'thumb more';
-        div.innerHTML = `<img src="${allThumbs[i]}" alt="Foto ${i + 1}" data-full="${allThumbs[i]}">
-                         <div class="overlay">+ Ver más</div>`;
+        div.innerHTML = `
+          <img src="assets/fotos/${i + 1}.jpg" 
+            alt="Foto ${i + 1}" 
+            data-full="assets/fotos/${i + 1}.jpg"
+            loading="lazy">
+          <div class="overlay">+ Ver más</div>
+        `;
       } else {
         div.className = 'thumb';
-        div.innerHTML = `<img src="${allThumbs[i]}" alt="Foto ${i + 1}" data-full="${allThumbs[i]}">`;
+        div.innerHTML = `
+          <img src="assets/fotos/${i + 1}.jpg" 
+                alt="Foto ${i + 1}" 
+                data-full="assets/fotos/${i + 1}.jpg"
+                loading="lazy">
+        `;
       }
+
       div.addEventListener('click', () => openLb(i));
       gallery.appendChild(div);
     }
+
   // --- MINIATURAS EN EL LIGHTBOX (con arrastre y rueda -> horizontal) ---
   const lbThumbs = document.getElementById('lbThumbs');
 
   function renderThumbs() {
     lbThumbs.innerHTML = '';
-    allThumbs.forEach((src, i) => {
+    allThumbs.forEach((thumbSrc, i) => {
       const thumb = document.createElement('img');
-      thumb.src = src;
+      thumb.src = thumbSrc;                   // miniatura o imagen
+      thumb.setAttribute('data-full', allThumbs[i]); // foto grande
+      thumb.loading = "lazy";
       thumb.alt = `Miniatura ${i + 1}`;
       if (i === current) thumb.classList.add('active');
       thumb.addEventListener('click', (e) => { e.stopPropagation(); openLb(i); });
       lbThumbs.appendChild(thumb);
     });
 
-    // centrar la mini activa en la vista
-    requestAnimationFrame(() => {
-      const active = lbThumbs.querySelector('img.active');
-      if (active) {
-        // inline:center centra horizontalmente la miniatura activa
-        active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      }
-    });
+    // centrar la mini activa
+    const active = lbThumbs.querySelector('img.active');
+    if (active) {
+      active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
   }
+
 
   // Reemplazamos openLb para que actualice miniaturas y centre
   openLb = function (idx) {
