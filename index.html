@@ -361,6 +361,28 @@
   border-color: var(--gold);
 }
 
+#lbThumbs {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  overflow-x: auto;       /* Habilita scroll horizontal */
+  -webkit-overflow-scrolling: touch; /* Desplazamiento suave en iOS */
+  scrollbar-width: thin;  /* En navegadores que lo soportan */
+}
+
+#lbThumbs img {
+  height: 60px;
+  cursor: pointer;
+  flex-shrink: 0; /* Evita que las miniaturas se encojan */
+  border-radius: 4px;
+}
+
+#lbThumbs img.active {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+
   </style>
 </head>
 
