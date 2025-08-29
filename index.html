@@ -332,6 +332,35 @@
         background: rgba(178, 34, 34, 0.5) !important;
       }
     }
+
+    .lightbox-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightbox-thumbs {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 6px;
+}
+
+.lightbox-thumbs img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.lightbox-thumbs img.active {
+  border-color: var(--gold);
+}
+
   </style>
 </head>
 
@@ -418,12 +447,17 @@
   </div>
 
   <!-- Lightbox -->
+<!-- Lightbox -->
   <div id="lightbox" class="lightbox" aria-hidden="true">
-    <button class="closeBtn" id="closeLb" aria-label="Cerrar">Cerrar ✕</button>
-    <button class="navBtn prev" id="prevLb" aria-label="Anterior">◀</button>
+  <button class="closeBtn" id="closeLb" aria-label="Cerrar">Cerrar ✕</button>
+  <button class="navBtn prev" id="prevLb" aria-label="Anterior">◀</button>
+  <div class="lightbox-content">
     <img id="lbImg" src="" alt="Imagen ampliada">
-    <button class="navBtn next" id="nextLb" aria-label="Siguiente">▶</button>
+    <div id="lbThumbs" class="lightbox-thumbs"></div>
   </div>
+  <button class="navBtn next" id="nextLb" aria-label="Siguiente">▶</button>
+  </div>
+
 
   <script>
     // --- BOTÓN ENTRAR Y MÚSICA ---
@@ -572,6 +606,32 @@
       div.addEventListener('click', () => openLb(i));
       gallery.appendChild(div);
     }
+
+    // --- MINIATURAS EN EL LIGHTBOX ---
+      const lbThumbs = document.getElementById('lbThumbs');
+
+      function renderThumbs() {
+        lbThumbs.innerHTML = '';
+        allThumbs.forEach((src, i) => {
+          const thumb = document.createElement('img');
+          thumb.src = src;
+          thumb.alt = `Miniatura ${i + 1}`;
+          if (i === current) thumb.classList.add('active');
+          thumb.addEventListener('click', () => openLb(i));
+          lbThumbs.appendChild(thumb);
+        });
+      }
+
+      // Modificamos openLb para que también actualice las miniaturas
+      const originalOpenLb = openLb;
+      openLb = function (idx) {
+        current = idx;
+        lbImg.src = allThumbs[current];
+        renderThumbs();
+        lb.classList.add('open');
+        lb.setAttribute('aria-hidden', 'false');
+      };
+
   </script>
 </body>
 
