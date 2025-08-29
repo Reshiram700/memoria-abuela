@@ -339,48 +339,46 @@
   align-items: center;
 }
 
-.lightbox-thumbs {
-  margin-top: 12px;
+/* Thumbs dentro del lightbox: forzar fila sin wrap y permitir gesto horizontal */
+.lightbox-thumbs,
+#lbThumbs {
   display: flex;
   gap: 8px;
-  overflow-x: auto;
-  padding: 6px;
+  padding: 8px;
+  overflow-x: auto;                  /* scroll horizontal */
+  -webkit-overflow-scrolling: touch;  /* iOS smooth */
+  scroll-behavior: smooth;
+  flex-wrap: nowrap;                  /* evita salto de línea */
+  touch-action: pan-x;                /* permite pan horizontal en touch */
+  width: min(92vw, 1000px);           /* limita ancho para que haya área de scroll */
+  box-sizing: border-box;
 }
 
-.lightbox-thumbs img {
+/* miniaturas */
+.lightbox-thumbs img,
+#lbThumbs img {
   width: 60px;
   height: 60px;
   object-fit: cover;
   border-radius: 6px;
   cursor: pointer;
-  border: 2px solid transparent;
-  transition: border-color 0.2s;
+  flex: 0 0 auto;     /* no se encojan, siempre mantienen tamaño */
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform .12s, box-shadow .12s;
 }
-
-.lightbox-thumbs img.active {
-  border-color: var(--gold);
-}
-
-#lbThumbs {
-  display: flex;
-  gap: 8px;
-  padding: 8px;
-  overflow-x: auto;       /* Habilita scroll horizontal */
-  -webkit-overflow-scrolling: touch; /* Desplazamiento suave en iOS */
-  scrollbar-width: thin;  /* En navegadores que lo soportan */
-}
-
-#lbThumbs img {
-  height: 60px;
-  cursor: pointer;
-  flex-shrink: 0; /* Evita que las miniaturas se encojan */
-  border-radius: 4px;
-}
-
+.lightbox-thumbs img.active,
 #lbThumbs img.active {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.18);
+  transform: scale(1.03);
 }
+
+/* cursor mientras arrastras con ratón */
+#lbThumbs.dragging {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
 
 
   </style>
@@ -628,31 +626,81 @@
       div.addEventListener('click', () => openLb(i));
       gallery.appendChild(div);
     }
+  // --- MINIATURAS EN EL LIGHTBOX (con arrastre y rueda -> horizontal) ---
+  const lbThumbs = document.getElementById('lbThumbs');
 
-    // --- MINIATURAS EN EL LIGHTBOX ---
-      const lbThumbs = document.getElementById('lbThumbs');
+  function renderThumbs() {
+    lbThumbs.innerHTML = '';
+    allThumbs.forEach((src, i) => {
+      const thumb = document.createElement('img');
+      thumb.src = src;
+      thumb.alt = `Miniatura ${i + 1}`;
+      if (i === current) thumb.classList.add('active');
+      thumb.addEventListener('click', (e) => { e.stopPropagation(); openLb(i); });
+      lbThumbs.appendChild(thumb);
+    });
 
-      function renderThumbs() {
-        lbThumbs.innerHTML = '';
-        allThumbs.forEach((src, i) => {
-          const thumb = document.createElement('img');
-          thumb.src = src;
-          thumb.alt = `Miniatura ${i + 1}`;
-          if (i === current) thumb.classList.add('active');
-          thumb.addEventListener('click', () => openLb(i));
-          lbThumbs.appendChild(thumb);
-        });
+    // centrar la mini activa en la vista
+    requestAnimationFrame(() => {
+      const active = lbThumbs.querySelector('img.active');
+      if (active) {
+        // inline:center centra horizontalmente la miniatura activa
+        active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       }
+    });
+  }
 
-      // Modificamos openLb para que también actualice las miniaturas
-      const originalOpenLb = openLb;
-      openLb = function (idx) {
-        current = idx;
-        lbImg.src = allThumbs[current];
-        renderThumbs();
-        lb.classList.add('open');
-        lb.setAttribute('aria-hidden', 'false');
-      };
+  // Reemplazamos openLb para que actualice miniaturas y centre
+  openLb = function (idx) {
+    current = idx;
+    lbImg.src = allThumbs[current];
+    renderThumbs();
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+  };
+
+  // --- Soporte de arrastre con ratón (drag-to-scroll) ---
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  lbThumbs.addEventListener('mousedown', (e) => {
+    isDown = true;
+    lbThumbs.classList.add('dragging');
+    startX = e.pageX - lbThumbs.offsetLeft;
+    scrollLeft = lbThumbs.scrollLeft;
+    e.preventDefault();
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDown = false;
+    lbThumbs.classList.remove('dragging');
+  });
+
+  lbThumbs.addEventListener('mouseleave', () => {
+    isDown = false;
+    lbThumbs.classList.remove('dragging');
+  });
+
+  lbThumbs.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    const x = e.pageX - lbThumbs.offsetLeft;
+    const walk = (x - startX) * 1.5; // velocidad
+    lbThumbs.scrollLeft = scrollLeft - walk;
+  });
+
+  // --- Convertir rueda vertical en scroll horizontal cuando el cursor está sobre la tira ---
+  lbThumbs.addEventListener('wheel', (e) => {
+    // si hay desplazamiento vertical, mover horizontalmente
+    if (Math.abs(e.deltaY) > 0) {
+      e.preventDefault();
+      lbThumbs.scrollLeft += e.deltaY;
+    }
+  }, { passive: false });
+
+  // Nota: en móviles el touch-scroll nativo seguirá funcionando gracias a overflow-x + touch-action.
+  // Si necesitas soporte extra para "drag" por touch (no recomendado por defecto) lo podemos añadir.
+
 
   </script>
 </body>
