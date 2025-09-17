@@ -379,6 +379,17 @@
   cursor: -webkit-grabbing;
 }
 
+.carta {
+  line-height: 1.75;
+  white-space: pre-wrap;      /* Mantiene saltos de línea que pongas en el HTML */
+  text-align: center;          /* Centra el texto horizontalmente */
+  word-wrap: break-word;       /* Permite romper palabras largas si es necesario */
+  hyphens: auto;               /* Permite guiones automáticos en palabras largas */
+  max-width: 800px;            /* Limita ancho para mejorar legibilidad */
+  margin: 0 auto;              /* Centra el bloque dentro del card */
+}
+
+
 
 
   </style>
@@ -451,33 +462,48 @@
     </section>
 
     <section class="card" id="video">
-      <h2>Video</h2>
-      <div
-        style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:1px solid rgba(255,255,255,.08)">
-        <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0" title="Video homenaje" frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen style="position:absolute;inset:0;width:100%;height:100%">
-        </iframe>
+      <h2>Videos</h2>
+      <div class="grid" id="videoGallery">
+        <div class="thumb"><img src="assets/fotos/1.jpg" alt="Video 1" data-video="assets/videos/1.mp4"></div>
+        <div class="thumb"><img src="assets/fotos/2.jpg" alt="Video 2" data-video="assets/videos/2.mp4"></div>
+        <div class="thumb"><img src="assets/fotos/3.jpg" alt="Video 3" data-video="assets/videos/3.mp4"></div>
+        <div class="thumb more" onclick="openVideoLb(3)">
+          <img src="assets/fotos/4.jpg" alt="Video 4" data-video="assets/videos/4.mp4">
+          <div class="overlay">+ Ver más</div>
+        </div>
       </div>
     </section>
+
 
     <footer>
       Hecho con cariño por Ing. Alberto Del Angel アルベルト
     </footer>
   </div>
 
-  <!-- Lightbox -->
-<!-- Lightbox -->
-  <div id="lightbox" class="lightbox" aria-hidden="true">
-  <button class="closeBtn" id="closeLb" aria-label="Cerrar">Cerrar ✕</button>
-  <button class="navBtn prev" id="prevLb" aria-label="Anterior">◀</button>
-  <div class="lightbox-content">
-    <img id="lbImg" src="" alt="Imagen ampliada">
-    <div id="lbThumbs" class="lightbox-thumbs"></div>
-  </div>
-  <button class="navBtn next" id="nextLb" aria-label="Siguiente">▶</button>
-  </div>
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button class="closeBtn" id="closeLb" aria-label="Cerrar">Cerrar ✕</button>
+    <button class="navBtn prev" id="prevLb" aria-label="Anterior">◀</button>
+    <div class="lightbox-content">
+      <img id="lbImg" src="" alt="Imagen ampliada">
+      <div id="lbThumbs" class="lightbox-thumbs"></div>
+    </div>
+    <button class="navBtn next" id="nextLb" aria-label="Siguiente">▶</button>
+    </div>
 
+    <!-- Lightbox de videos -->
+    <div id="videoLightbox" class="lightbox" aria-hidden="true">
+      <button class="closeBtn" id="closeVideoLb" aria-label="Cerrar">Cerrar ✕</button>
+      <button class="navBtn prev" id="prevVideoLb" aria-label="Anterior">◀</button>
+      <div class="lightbox-content">
+        <video id="lbVideo" controls autoplay
+          style="max-width:92vw;max-height:86vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.6)">
+          <source src="" type="video/mp4">
+          Tu navegador no soporta la reproducción de video.
+        </video>
+      </div>
+      <button class="navBtn next" id="nextVideoLb" aria-label="Siguiente">▶</button>
+    </div>
 
   <script>
     // --- BOTÓN ENTRAR Y MÚSICA ---
@@ -695,6 +721,63 @@
 
   // Nota: en móviles el touch-scroll nativo seguirá funcionando gracias a overflow-x + touch-action.
   // Si necesitas soporte extra para "drag" por touch (no recomendado por defecto) lo podemos añadir.
+
+  // --- GALERÍA DE VIDEOS ---
+    const videoThumbs = [
+      "assets/videos/1.mp4",
+      "assets/videos/2.mp4",
+      "assets/videos/3.mp4",
+      "assets/videos/4.mp4"
+    ];
+
+    const videoLb = document.getElementById('videoLightbox');
+    const lbVideo = document.getElementById('lbVideo');
+    const closeVideoLb = document.getElementById('closeVideoLb');
+    const prevVideoLb = document.getElementById('prevVideoLb');
+    const nextVideoLb = document.getElementById('nextVideoLb');
+    let currentVideo = 0;
+
+    function openVideoLb(idx) {
+      currentVideo = idx;
+      lbVideo.querySelector("source").src = videoThumbs[currentVideo];
+      lbVideo.load();
+      lbVideo.play();
+      videoLb.classList.add('open');
+      videoLb.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeVideo() {
+      videoLb.classList.remove('open');
+      videoLb.setAttribute('aria-hidden', 'true');
+      lbVideo.pause();
+    }
+
+    function prevVideo() {
+      currentVideo = (currentVideo - 1 + videoThumbs.length) % videoThumbs.length;
+      openVideoLb(currentVideo);
+    }
+
+    function nextVideo() {
+      currentVideo = (currentVideo + 1) % videoThumbs.length;
+      openVideoLb(currentVideo);
+    }
+
+    closeVideoLb.addEventListener('click', closeVideo);
+    prevVideoLb.addEventListener('click', e => { e.stopPropagation(); prevVideo(); });
+    nextVideoLb.addEventListener('click', e => { e.stopPropagation(); nextVideo(); });
+    videoLb.addEventListener('click', e => { if (e.target === videoLb) closeVideo(); });
+    window.addEventListener('keydown', e => {
+      if (!videoLb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeVideo();
+      if (e.key === 'ArrowLeft') prevVideo();
+      if (e.key === 'ArrowRight') nextVideo();
+    });
+
+    // Vincular miniaturas con apertura de videos
+    document.querySelectorAll('#videoGallery .thumb').forEach((div, i) => {
+      div.addEventListener('click', () => openVideoLb(i));
+    });
+
 
 
   </script>
